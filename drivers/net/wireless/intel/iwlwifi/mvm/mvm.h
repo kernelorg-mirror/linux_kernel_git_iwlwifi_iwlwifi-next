@@ -769,6 +769,12 @@ struct iwl_mvm_dqa_txq_info {
 	enum iwl_mvm_queue_status status;
 };
 
+struct iwl_time_sync_data {
+	struct sk_buff_head frame_list;
+	u8 peer_addr[ETH_ALEN];
+	bool active;
+};
+
 struct iwl_mvm {
 	/* for logger access */
 	struct device *dev;
@@ -1107,6 +1113,8 @@ struct iwl_mvm {
 	bool sta_remove_requires_queue_remove;
 
 	bool pldr_sync;
+
+	struct iwl_time_sync_data time_sync;
 };
 
 /* Extract MVM priv from op_mode and _hw */
