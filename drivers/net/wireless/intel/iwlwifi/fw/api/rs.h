@@ -1,6 +1,6 @@
 /* SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause */
 /*
- * Copyright (C) 2012-2014, 2018-2020 Intel Corporation
+ * Copyright (C) 2012-2014, 2018-2021 Intel Corporation
  * Copyright (C) 2017 Intel Deutschland GmbH
  */
 #ifndef __iwl_fw_api_rs_h__
@@ -184,8 +184,42 @@ struct iwl_tlc_update_notif {
 	__le32 amsdu_enabled;
 } __packed; /* TLC_MNG_UPDATE_NTFY_API_S_VER_2 */
 
-/*
- * These serve as indexes into
+#ifdef CONFIG_IWLWIFI_DHC
+/**
+ * enum iwl_tlc_debug_types - debug options
+ */
+enum iwl_tlc_debug_types {
+	/* @IWL_TLC_DEBUG_FIXED_RATE: set fixed rate for rate scaling */
+	IWL_TLC_DEBUG_FIXED_RATE,
+}; /* TLC_MNG_DEBUG_TYPES_API_E */
+#endif /* CONFIG_IWLWIFI_DHC */
+
+#ifdef CONFIG_IWLWIFI_DHC
+#define MAX_DATA_IN_DHC_TLC_CMD 10
+
+/**
+ * struct iwl_dhc_tlc_dbg - fixed debug config
+ * @sta_id: bit 0 - enable/disable, bits 1 - 7 hold station id
+ * @reserved1: reserved
+ * @type: type id of %enum iwl_tlc_debug_types
+ * @data: data to send
+ */
+struct iwl_dhc_tlc_cmd {
+	u8 sta_id;
+	u8 reserved1[3];
+	__le32 type;
+	__le32 data[MAX_DATA_IN_DHC_TLC_CMD];
+} __packed; /* TLC_MNG_DEBUG_CMD_S */
+#endif /* CONFIG_IWLWIFI_DHC */
+
+#define IWL_MAX_MCS_DISPLAY_SIZE        12
+
+struct iwl_rate_mcs_info {
+	char    mbps[IWL_MAX_MCS_DISPLAY_SIZE];
+	char    mcs[IWL_MAX_MCS_DISPLAY_SIZE];
+};
+
+/* These serve as indexes into
  * struct iwl_rate_info fw_rate_idx_to_plcp[IWL_RATE_COUNT];
  * TODO: avoid overlap between legacy and HT rates
  */
