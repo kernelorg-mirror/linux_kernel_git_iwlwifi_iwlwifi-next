@@ -1077,6 +1077,8 @@ iwl_op_mode_mvm_start(struct iwl_trans *trans, const struct iwl_cfg *cfg,
 	static const u8 no_reclaim_cmds[] = {
 		TX_CMD,
 	};
+	u32 max_agg = trans->trans_cfg->device_family >= IWL_DEVICE_FAMILY_BZ ?
+			   IEEE80211_MAX_AMPDU_BUF_EHT : IEEE80211_MAX_AMPDU_BUF_HE;
 	size_t scan_size;
 	u32 min_backoff;
 	struct iwl_mvm_csme_conn_info *csme_conn_info __maybe_unused;
@@ -1098,12 +1100,12 @@ iwl_op_mode_mvm_start(struct iwl_trans *trans, const struct iwl_cfg *cfg,
 	if (!hw)
 		return NULL;
 
-	hw->max_rx_aggregation_subframes = IEEE80211_MAX_AMPDU_BUF_HE;
+	hw->max_rx_aggregation_subframes = max_agg;
 
 	if (cfg->max_tx_agg_size)
 		hw->max_tx_aggregation_subframes = cfg->max_tx_agg_size;
 	else
-		hw->max_tx_aggregation_subframes = IEEE80211_MAX_AMPDU_BUF_HE;
+		hw->max_tx_aggregation_subframes = max_agg;
 
 	op_mode = hw->priv;
 
